@@ -12,10 +12,12 @@ public class Player : MonoBehaviour
     public GameObject winText;
     public int winScore;
 
+    public AudioSource chompingSound;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        chompingSound = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -46,6 +48,8 @@ public class Player : MonoBehaviour
         if(collision.gameObject.tag.Contains ("Food"))
         {
             score++;
+
+            chompingSound.Play();
 
             Destroy(collision.gameObject);
 
