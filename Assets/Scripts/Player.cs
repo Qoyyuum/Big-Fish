@@ -30,11 +30,20 @@ public class Player : MonoBehaviour
         verticalInput = joystick.Vertical * moveSpeed;
 
         transform.Translate(horizontalInput, verticalInput, 0);
+        if(horizontalInput < 0)
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().flipX = true;
+        }
+        else if(horizontalInput > 0)
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().flipX = false;
+        }
+        
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.tag == "Food")
+        if(collision.gameObject.tag.Contains ("Food"))
         {
             score++;
 
