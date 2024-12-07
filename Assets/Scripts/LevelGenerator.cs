@@ -77,6 +77,16 @@ public class LevelGenerator : MonoBehaviour
             // Spawn the fish
             GameObject newFish = Instantiate(fishPrefab, spawnPos, Quaternion.identity);
             newFish.tag = "Food";
+
+            // Add FoodFish behavior component
+            FoodFish fishBehavior = newFish.AddComponent<FoodFish>();
+            
+            // Set level bounds in the fish behavior
+            fishBehavior.levelBounds = new Vector2(spawnAreaWidth, spawnAreaHeight);
+            
+            // Randomize speed slightly
+            fishBehavior.swimSpeed = Random.Range(2f, 4f);
+            fishBehavior.detectionRange = Random.Range(4f, 6f);
         }
     }
 
