@@ -14,7 +14,10 @@ public class LevelGenerator : MonoBehaviour
     
     [Header("Difficulty Settings")]
     public int currentLevel = 1;
+    public int maxLevel = 10;  // Maximum level
     public float difficultyMultiplier = 1.2f; // Increase fish count per level
+    public int minFishPerLevel = 5;  // Minimum fish to spawn
+    public int maxFishPerLevel = 20; // Maximum fish to spawn
 
     private void Start()
     {
@@ -23,8 +26,13 @@ public class LevelGenerator : MonoBehaviour
 
     public void GenerateLevel()
     {
-        // Calculate number of fish based on level
-        int fishToSpawn = Mathf.RoundToInt(fishPerLevel * Mathf.Pow(difficultyMultiplier, currentLevel - 1));
+        Debug.Log($"Generating Level {currentLevel}");
+        // Calculate number of fish based on level, with min and max limits
+        float multiplier = Mathf.Pow(difficultyMultiplier, currentLevel - 1);
+        int fishToSpawn = Mathf.RoundToInt(fishPerLevel * multiplier);
+        fishToSpawn = Mathf.Clamp(fishToSpawn, minFishPerLevel, maxFishPerLevel);
+        
+        Debug.Log($"Attempting to spawn {fishToSpawn} fish");
         
         // Clear existing food fish
         GameObject[] existingFish = GameObject.FindGameObjectsWithTag("Food");
@@ -102,7 +110,18 @@ public class LevelGenerator : MonoBehaviour
     // Call this to generate next level
     public void NextLevel()
     {
-        currentLevel++;
-        GenerateLevel();
+        Debug.Log($"NextLevel called. Current level: {currentLevel}, Max level: {maxLevel}");
+        if (currentLevel < maxLevel)
+        {
+            currentLevel++;
+            Debug.Log($"Moving to level {currentLevel}");
+            GenerateLevel();
+        }
+        else
+        {
+            Debug.Log("Max level reached!");
+            // Still generate fish even at max level
+            GenerateLevel();
+        }
     }
 }
