@@ -2,22 +2,19 @@ using UnityEngine;
 
 public class FoodFish : MonoBehaviour
 {
-    [Header("Movement Settings")]
-    public float swimSpeed = 3f;           // Base swimming speed
-    public float panicSpeedMultiplier = 2f;// Speed multiplier when player is near
-    public float detectionRange = 5f;      // How far to detect player
-    public float wanderRadius = 3f;        // How far fish wanders when idle
-    public float directionChangeInterval = 3f; // How often to change direction when wandering
-
-    [Header("Behavior")]
-    public float minDistanceFromBounds = 1f; // Minimum distance to keep from level bounds
-    public Vector2 levelBounds = new Vector2(20f, 10f); // Level boundaries (should match LevelGenerator)
+    [HideInInspector] public Vector2 levelBounds = new Vector2(20f, 10f); 
+    [HideInInspector] public float swimSpeed = 3f;
+    [HideInInspector] public float detectionRange = 5f;
 
     private Transform player;
     private Vector2 wanderTarget;
     private float nextDirectionChange;
-    private Rigidbody2D rb;
+    private float directionChangeInterval = 3f;
+    private float minDistanceFromBounds = 1f;
     private SpriteRenderer spriteRenderer;
+    private Vector2 initialTarget;
+    private bool isSwimmingToInitialTarget = true;
+    private Rigidbody2D rb;
 
     void Start()
     {
@@ -26,11 +23,17 @@ public class FoodFish : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         
-        // Set initial wander target
-        SetNewWanderTarget();
+        // Set initial wander target to current position
+        wanderTarget = transform.position;
         
         // Add a small random variation to speed
         swimSpeed *= Random.Range(0.8f, 1.2f);
+    }
+
+    public void SetInitialTarget(Vector2 target)
+    {
+        initialTarget = target;
+        isSwimmingToInitialTarget = true;
     }
 
     void Update()
@@ -41,15 +44,25 @@ public class FoodFish : MonoBehaviour
         float currentSpeed = swimSpeed;
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
 
-        // If player is within detection range, swim away
-        if (distanceToPlayer < detectionRange)
+        if (isSwimmingToInitialTarget)
         {
-            moveDirection = (Vector2)transform.position - (Vector2)player.position;
-            currentSpeed *= panicSpeedMultiplier;
+            // Swim towards initial target
+            moveDirection = initialTarget - (Vector2)transform.position;
+            if (moveDirection.magnitude < 0.1f)
+            {
+                isSwimmingToInitialTarget = false;
+                SetNewWanderTarget();
+            }
         }
-        // Otherwise, wander around
+        else if (distanceToPlayer < detectionRange)
+        {
+            // If player is within detection range, swim away
+            moveDirection = (Vector2)transform.position - (Vector2)player.position;
+            currentSpeed *= 1.5f; // Swim faster when escaping
+        }
         else
         {
+            // Normal wandering behavior
             if (Time.time > nextDirectionChange)
             {
                 SetNewWanderTarget();
@@ -79,6 +92,7 @@ public class FoodFish : MonoBehaviour
     void SetNewWanderTarget()
     {
         // Set a random point within wander radius
+        float wanderRadius = 3f;
         float randomX = Random.Range(-wanderRadius, wanderRadius);
         float randomY = Random.Range(-wanderRadius, wanderRadius);
         wanderTarget = (Vector2)transform.position + new Vector2(randomX, randomY);
