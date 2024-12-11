@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 37dcfee41a180274fa2f534780ed65c4
+guid: 27e2919cb597f224aa451da161e01f76
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2329779965571147808
-    second: big-fish-game-logo-2_0
+      213: -6793546589572829903
+    second: bigfishicon_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: big-fish-game-logo-2_0
+      name: bigfishicon_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1472
-        height: 832
+        width: 512
+        height: 512
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0e75f4b0775faafd0800000000000000
-      internalID: -2329779965571147808
+      spriteID: 13de17bde5978b1a0800000000000000
+      internalID: -6793546589572829903
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      big-fish-game-logo-2_0: -2329779965571147808
+      bigfishicon_0: -6793546589572829903
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
