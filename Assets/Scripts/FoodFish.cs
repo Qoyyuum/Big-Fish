@@ -85,7 +85,14 @@ public class FoodFish : MonoBehaviour
         // Flip sprite based on movement direction
         if (movement.x != 0)
         {
-            spriteRenderer.flipX = movement.x < 0;
+            if(movement.x < 0)
+            {
+                spriteRenderer.flipX = true;
+            }
+            else if (movement.x > 0)
+            {
+                spriteRenderer.flipX = false;
+            }
         }
     }
 

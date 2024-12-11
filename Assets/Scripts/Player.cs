@@ -29,6 +29,8 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        score = 0;
+        winScore = 7;
         chompingSound = GetComponent<AudioSource>();
         currentHunger = maxHunger;
         if (hungerMeter != null)
@@ -90,16 +92,17 @@ public class Player : MonoBehaviour
     {
         if(collision.gameObject.tag.Contains ("Food"))
         {
-            score++;
-            // Gain hunger when eating
-            currentHunger = Mathf.Min(currentHunger + hungerGainOnEat, maxHunger);
-
+            Destroy(collision.gameObject);
             chompingSound.Play();
 
-            Destroy(collision.gameObject);
-
-            if(score >= winScore)
+            // Gain hunger when eating
+            currentHunger = Mathf.Min(currentHunger + hungerGainOnEat, maxHunger);
+            score++;
+            Debug.Log("Your score is " + score);
+            if (score >= winScore)
             {
+                score = 0;
+                Debug.Log("Your score now has reset to " + score);
                 winText.SetActive(true);
                 Invoke("StartNextLevel", 2f);
             }
@@ -108,11 +111,13 @@ public class Player : MonoBehaviour
 
     private void StartNextLevel()
     {
-        winText.SetActive(false);
         score = 0;
+        winScore += 1;
+        winText.SetActive(false);
         // Restore some hunger when starting new level
         currentHunger = Mathf.Max(currentHunger, maxHunger * 0.5f);
         levelGenerator.NextLevel();
+        Debug.Log("StartNextLevel");
     }
 
     private void GameOver()
@@ -149,5 +154,6 @@ public class Player : MonoBehaviour
         }
         levelGenerator.currentLevel = 1;
         levelGenerator.GenerateLevel();
+        Debug.Log("restart game");
     }
 }
