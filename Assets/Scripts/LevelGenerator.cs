@@ -23,9 +23,6 @@ public class LevelGenerator : MonoBehaviour
 
     public void GenerateLevel()
     {
-        // Calculate number of fish based on level
-        int fishToSpawn = Mathf.RoundToInt(fishPerLevel * Mathf.Pow(difficultyMultiplier, currentLevel - 1));
-        
         // Clear existing food fish
         GameObject[] existingFish = GameObject.FindGameObjectsWithTag("Food");
         foreach (GameObject fish in existingFish)
@@ -33,21 +30,25 @@ public class LevelGenerator : MonoBehaviour
             Destroy(fish);
         }
 
+        // Calculate number of fish based on level
+        int fishToSpawn = Mathf.RoundToInt(fishPerLevel * Mathf.Pow(difficultyMultiplier, currentLevel - 1));
+        Debug.Log(fishToSpawn + " fishes to spawn");
+
         // Spawn new fish
         for (int i = 0; i < fishToSpawn; i++)
         {
-            SpawnFish(20); // Try 20 times to find a valid position
+            SpawnFish();
         }
     }
 
-    private void SpawnFish(int maxAttempts)
+    private void SpawnFish()
     {
         Vector2 spawnPos = Vector2.zero;
         bool validPosition = false;
-        int attempts = 0;
+        GameObject[] existingFish = GameObject.FindGameObjectsWithTag("Food");
 
         // Try to find a valid position
-        while (!validPosition && attempts < maxAttempts)
+        while (!validPosition)
         {
             // Generate random position within spawn area
             spawnPos = new Vector2(
@@ -56,8 +57,6 @@ public class LevelGenerator : MonoBehaviour
             );
 
             // Check if position is far enough from other fish
-            validPosition = true;
-            GameObject[] existingFish = GameObject.FindGameObjectsWithTag("Food");
             foreach (GameObject fish in existingFish)
             {
                 if (Vector2.Distance(spawnPos, fish.transform.position) < minDistance)
@@ -65,8 +64,11 @@ public class LevelGenerator : MonoBehaviour
                     validPosition = false;
                     break;
                 }
+                else
+                {
+                    validPosition = true;
+                }
             }
-            attempts++;
         }
 
         if (validPosition)
